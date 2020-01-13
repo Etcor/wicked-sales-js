@@ -8,8 +8,8 @@ function ProductListItem(props) {
       style={{ height: '100%' }}>
       <img
         alt=""
-        className="card-img-top"
         src={props.image}
+        className="card-img-top"
         style={{ objectFit: 'contain', height: '300px' }}
       />
       <div className="card-body">
