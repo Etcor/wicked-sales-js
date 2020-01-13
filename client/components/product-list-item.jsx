@@ -1,6 +1,7 @@
 import React from 'react';
 
 function ProductListItem(props) {
+  const price = (props.price / 100).toFixed(2);
   return (
     <div
       className="card"
@@ -16,7 +17,7 @@ function ProductListItem(props) {
           {props.name}
         </h5>
         <h6 className="card-subtitle text-muted pb-2">
-            ${props.price / 100}
+            ${price}
         </h6>
         <p className="card-text">
           {props.shortDescription}
