@@ -2,10 +2,18 @@ import React from 'react';
 
 function ProductListItem(props) {
   const price = (props.price / 100).toFixed(2);
+
+  const handleClick = () => {
+    props.viewDetails('details', {
+      productId: props.productId
+    });
+  };
+
   return (
     <div
       className="card"
-      style={{ height: '100%' }}>
+      onClick={handleClick}
+      style={{ height: '100%', cursor: 'pointer' }}>
       <img
         alt=""
         src={props.image}
