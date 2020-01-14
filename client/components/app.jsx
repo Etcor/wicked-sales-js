@@ -41,7 +41,9 @@ export default class App extends React.Component {
       <React.Fragment>
         <Header/>
         <div className="container-fluid bg-light pt-5">
-          { this.renderView() }
+          <div className="container">
+            { this.renderView() }
+          </div>
         </div>
       </React.Fragment>
     );

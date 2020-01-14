@@ -26,42 +26,40 @@ class ProductDetails extends React.Component {
   render() {
     const { product } = this.state;
     return !product
-      ? <h1>Loading</h1>
+      ? <h3 className="text-center">Loading...</h3>
       : (
-        <div className="container">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex align-items-center pl-3">
-                <i className="fas fa-chevron-left pb-3 mr-2"></i>
-                <p
-                  style={{ cursor: 'pointer' }}
-                  onClick={this.viewCatalog}>
+        <div className="card">
+          <div className="card-body">
+            <div className="d-flex align-items-center pl-3">
+              <i className="fas fa-chevron-left pb-3 mr-2"></i>
+              <p
+                style={{ cursor: 'pointer' }}
+                onClick={this.viewCatalog}>
                   Back to catalog
+              </p>
+            </div>
+            <div className="row">
+              <img
+                alt=""
+                src={product.image}
+                className="col-lg-7 col-md-12"
+                style={{ objectFit: 'contain', height: '400px' }}
+              />
+              <div className="card-body col-lg-5 col-md-12">
+                <h2 className="card-title">
+                  {product.name}
+                </h2>
+                <h5 className="card-subtitle text-muted pb-4">
+                  ${(product.price / 100).toFixed(2)}
+                </h5>
+                <p className="card-text">
+                  {product.shortDescription}
                 </p>
               </div>
-              <div className="row">
-                <img
-                  alt=""
-                  src={product.image}
-                  className="col-lg-7 col-md-12"
-                  style={{ objectFit: 'contain', height: '400px' }}
-                />
-                <div className="card-body col-lg-5 col-md-12">
-                  <h2 className="card-title">
-                    {product.name}
-                  </h2>
-                  <h5 className="card-subtitle text-muted pb-4">
-                  ${(product.price / 100).toFixed(2)}
-                  </h5>
-                  <p className="card-text">
-                    {product.shortDescription}
-                  </p>
-                </div>
-                <div className="card-body">
-                  <p className="card-text">
-                    {product.longDescription}
-                  </p>
-                </div>
+              <div className="card-body">
+                <p className="card-text">
+                  {product.longDescription}
+                </p>
               </div>
             </div>
           </div>
