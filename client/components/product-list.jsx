@@ -20,6 +20,7 @@ class ProductList extends React.Component {
 
   render() {
     const { products } = this.state;
+    const { viewDetails } = this.props;
     return (
       <div className="container">
         <div className="row">
@@ -32,6 +33,8 @@ class ProductList extends React.Component {
                   name={product.name}
                   image={product.image}
                   price={product.price}
+                  viewDetails={viewDetails}
+                  productId={product.productId}
                   shortDescription={product.shortDescription}
                 />
               </div>
