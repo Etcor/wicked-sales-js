@@ -87,7 +87,7 @@ app.post('/api/cart', (req, res, next) => {
         const products = result.rows;
 
         if (products.length === 0) {
-          return next(new ClientError('There are no products by that Id.', 400));
+          return Promise.reject(new ClientError('There are no products by that Id.', 400));
         } else if (req.session.cartId) {
           const { price } = products[0];
           const { cartId } = req.session;
