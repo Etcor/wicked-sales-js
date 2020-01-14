@@ -54,7 +54,7 @@ app.get('/api/products/:productId', (req, res, next) => {
 app.get('/api/cart', (req, res, next) => {
   const { cartId } = req.session;
   if (!cartId) {
-    res.status(200).send([]);
+    return res.status(200).send([]);
   }
   const sql = `
         select "c"."cartItemId",
