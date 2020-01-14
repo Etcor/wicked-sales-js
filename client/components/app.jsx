@@ -24,26 +24,26 @@ export default class App extends React.Component {
     });
   }
 
-  render() {
+  renderView() {
     const { view } = this.state;
-    return view.name === 'catalog'
-      ? (
-        <React.Fragment>
-          <Header/>
-          <div className="container-fluid bg-light pt-5">
-            <ProductList viewDetails={this.setView} />
-          </div>
-        </React.Fragment>
-      )
-      : (
-        <React.Fragment>
-          <Header />
-          <div className="container-fluid bg-light pt-5">
-            <ProductDetails
-              viewProduct={view.params}
-              viewCatalog={this.setView} />
-          </div>
-        </React.Fragment>
-      );
+    return (
+      view.name === 'catalog'
+        ? <ProductList
+          viewDetails={this.setView} />
+        : <ProductDetails
+          viewProduct={view.params}
+          viewCatalog={this.setView} />
+    );
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Header/>
+        <div className="container-fluid bg-light pt-5">
+          { this.renderView() }
+        </div>
+      </React.Fragment>
+    );
   }
 }
