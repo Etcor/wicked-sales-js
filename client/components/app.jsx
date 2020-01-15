@@ -10,9 +10,40 @@ export default class App extends React.Component {
       view: {
         name: 'catalog',
         params: {}
-      }
+      },
+      cart: []
     };
     this.setView = this.setView.bind(this);
+    this.addToCart = this.addToCart.bind(this);
+  }
+
+  componentDidMount() {
+    this.getCartItems();
+  }
+
+  getCartItems() {
+    fetch('/api/cart')
+      .then(res => res.json())
+      .then(cart => {
+        this.setState({ cart });
+      });
+  }
+
+  addToCart(product) {
+    fetch('/api/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    })
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          cart: [...this.state.cart, result]
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   setView(name, params) {
@@ -29,18 +60,25 @@ export default class App extends React.Component {
     return (
       view.name === 'catalog'
         ? <ProductList
-          viewDetails={this.setView} />
+          viewDetails={this.setView}
+        />
         : <ProductDetails
           viewProduct={view.params}
-          viewCatalog={this.setView} />
+          viewCatalog={this.setView}
+          addToCart={this.addToCart}
+        />
     );
   }
 
   render() {
     return (
       <React.Fragment>
-        <Header/>
-        <div className="container-fluid bg-light pt-5">
+        <div
+          style={{ height: '100vh' }}
+          className="container-fluid bg-light p-0">
+          <Header
+            cartItemCount={this.state.cart.length}
+          />
           <div className="container">
             { this.renderView() }
           </div>
