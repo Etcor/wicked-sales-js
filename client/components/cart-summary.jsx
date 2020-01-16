@@ -35,14 +35,18 @@ function CartSummary(props) {
 
   const viewCart = () => {
     return props.cart.length === 0
-      ? <h3 className="text-center">Your cart is empty.</h3>
+      ? <h3 className="text-center text-muted">Your cart is empty.</h3>
       : props.cart.map(item => {
         return <CartSummaryItems key={item.cartItemId} {...item} />;
       });
   };
 
-  const handleClick = () => {
-    props.viewCatalog('catalog', {});
+  const showCatalog = () => {
+    props.setView('catalog', {});
+  };
+
+  const showCheckout = () => {
+    props.setView('checkout', {});
   };
 
   const totalPrice = () => {
@@ -55,12 +59,14 @@ function CartSummary(props) {
     return formatTotal;
   };
 
+  const buttonIsActive = props.cart.length === 0 ? 'disabled' : '';
+
   return (
     <React.Fragment>
       <div className="d-flex align-items-center">
         <i className="fas fa-chevron-left pb-3 mr-2"></i>
         <p
-          onClick={handleClick}
+          onClick={showCatalog}
           style={{ cursor: 'pointer' }}>
           Back to catalog
         </p>
@@ -70,6 +76,14 @@ function CartSummary(props) {
         <h2 className="text-right">Total: ${totalPrice()}</h2>
       </div>
       {viewCart()}
+      <div className="d-flex flex-row-reverse align-items-center py-3 ">
+        <a
+          onClick={showCheckout}
+          style={{ cursor: 'pointer' }}
+          className={`btn btn-primary text-white ${buttonIsActive}`}>
+          Checkout
+        </a>
+      </div>
     </React.Fragment>
   );
 }
