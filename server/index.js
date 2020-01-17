@@ -110,21 +110,43 @@ app.post('/api/cart', (req, res, next) => {
       .then(cart => {
         const { price, cartId } = cart;
         req.session.cartId = cartId;
-
-        const sql = `
-          insert into "cartItems" ("cartId", "productId", "price")
-          values ($1, $2, $3)
-          returning "cartItemId"
+        // check if cart already has an item with the productId, if it does increment instead of insert
+        const checkifItemExistsQuery = `
+          select * from "cartItems"
+          where "cartId" = $1 and "productId" = $2;
         `;
-        const params = [cartId, productId, price];
-
-        return db.query(sql, params);
+        const checkParams = [cartId, productId];
+        return (
+          db.query(checkifItemExistsQuery, checkParams)
+            .then(result => {
+              if (result.rowCount === 0) {
+                const sql = `
+                insert into "cartItems" ("cartId", "productId", "price", "quantity")
+                values ($1, $2, $3, $4)
+                returning "cartItemId";
+              `;
+                const params = [cartId, productId, price, 1];
+                return db.query(sql, params);
+              } else {
+                const sql = `
+                update "cartItems"
+                   set "quantity" = quantity + 1
+                 where "cartId" = $1 and "productId" = $2
+                 returning "cartItemId";
+              `;
+                const params = [cartId, productId];
+                // this query doesn't return anything, what gives?
+                return db.query(sql, params);
+              }
+            })
+        );
       })
       .then(result => {
         const { cartItemId } = result.rows[0];
         const sql = `
           select "c"."cartItemId",
                  "c"."price",
+                 "c"."quantity",
                  "p"."productId",
                  "p"."image",
                  "p"."name",
