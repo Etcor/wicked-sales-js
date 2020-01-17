@@ -3,6 +3,10 @@ import React from 'react';
 function CartSummaryItems(props) {
 
   const price = (props.price / 100).toFixed(2);
+  const deleteItem = () => {
+    const { cartItemId } = props;
+    props.deleteItem({ cartItemId });
+  };
 
   return (
     <div className="card mb-3">
@@ -24,6 +28,11 @@ function CartSummaryItems(props) {
             <p className="card-text">
               {props.shortDescription}
             </p>
+            <button
+              onClick={deleteItem}
+              className="btn btn-danger">
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -37,7 +46,7 @@ function CartSummary(props) {
     return props.cart.length === 0
       ? <h3 className="text-center text-muted">Your cart is empty.</h3>
       : props.cart.map(item => {
-        return <CartSummaryItems key={item.cartItemId} {...item} />;
+        return <CartSummaryItems deleteItem={props.deleteItem} key={item.cartItemId} {...item} />;
       });
   };
 
