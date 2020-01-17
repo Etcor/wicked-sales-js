@@ -183,21 +183,8 @@ app.delete('/api/cart', (req, res, next) => {
   `;
   const params = [cartId, cartItemId];
   db.query(sql, params)
-    .then(() => {
-      const sql = `
-        select "c"."cartItemId",
-          "c"."price",
-          "p"."productId",
-          "p"."image",
-          "p"."name",
-          "p"."shortDescription"
-      from "cartItems" as "c"
-      join "products" as "p" using ("productId")
-    where "c"."cartId" = $1
-  `;
-      const params = [cartId];
-      db.query(sql, params)
-        .then(response => res.status(200).json(response.rows));
+    .then(response => {
+      res.sendStatus(204);
     })
     .catch(err => next(err));
 });
