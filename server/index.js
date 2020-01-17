@@ -170,6 +170,38 @@ app.post('/api/orders', (req, res, next) => {
   }
 });
 
+app.delete('/api/cart', (req, res, next) => {
+  const { cartId } = req.session;
+  const { cartItemId } = req.body;
+  if (!cartItemId) {
+    return next(new ClientError('Must include item\'s ID to delete item', 400));
+  }
+  const sql = `
+    delete from "cartItems"
+    where "cartId"     = $1
+      and "cartItemId" = $2;
+  `;
+  const params = [cartId, cartItemId];
+  db.query(sql, params)
+    .then(() => {
+      const sql = `
+        select "c"."cartItemId",
+          "c"."price",
+          "p"."productId",
+          "p"."image",
+          "p"."name",
+          "p"."shortDescription"
+      from "cartItems" as "c"
+      join "products" as "p" using ("productId")
+    where "c"."cartId" = $1
+  `;
+      const params = [cartId];
+      db.query(sql, params)
+        .then(response => res.status(200).json(response.rows));
+    })
+    .catch(err => next(err));
+});
+
 app.use('/api', (req, res, next) => {
   next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
 });
