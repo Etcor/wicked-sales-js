@@ -59,6 +59,7 @@ app.get('/api/cart', (req, res, next) => {
   const sql = `
         select "c"."cartItemId",
           "c"."price",
+          "c"."quantity",
           "p"."productId",
           "p"."image",
           "p"."name",
@@ -74,18 +75,18 @@ app.get('/api/cart', (req, res, next) => {
 });
 
 app.post('/api/cart', (req, res, next) => {
-  const { productId } = req.body;
-  if (productId > 0 && typeof parseInt(productId) === 'number') {
+  const { productId, quantity } = req.body;
+  const idIsValid = productId > 0 && typeof parseInt(productId) === 'number';
+  const quantityIsValid = quantity > 0 && typeof parseInt(quantity) === 'number';
+  if (idIsValid && quantityIsValid) {
     const params = [productId];
     const sql = `
       select "price"
       from "products"
       where "productId" = $1`;
-
     db.query(sql, params)
       .then(result => {
         const products = result.rows;
-
         if (products.length === 0) {
           return Promise.reject(new ClientError('There are no products by that Id.', 400));
         } else if (req.session.cartId) {
@@ -110,21 +111,41 @@ app.post('/api/cart', (req, res, next) => {
       .then(cart => {
         const { price, cartId } = cart;
         req.session.cartId = cartId;
-
-        const sql = `
-          insert into "cartItems" ("cartId", "productId", "price")
-          values ($1, $2, $3)
-          returning "cartItemId"
+        const doesItemExist = `
+          select * from "cartItems"
+          where "cartId" = $1 and "productId" = $2;
         `;
-        const params = [cartId, productId, price];
-
-        return db.query(sql, params);
+        const params = [cartId, productId];
+        return (
+          db.query(doesItemExist, params)
+            .then(result => {
+              if (result.rowCount === 0) {
+                const sql = `
+                insert into "cartItems" ("cartId", "productId", "price", "quantity")
+                values ($1, $2, $3, $4)
+                returning "cartItemId";
+              `;
+                const params = [cartId, productId, price, quantity];
+                return db.query(sql, params);
+              } else {
+                const sql = `
+                update "cartItems"
+                   set "quantity" = "quantity" + $1
+                 where "cartId" = $2 and "productId" = $3
+                 returning "cartItemId";
+              `;
+                const params = [quantity, cartId, productId];
+                return db.query(sql, params);
+              }
+            })
+        );
       })
       .then(result => {
         const { cartItemId } = result.rows[0];
         const sql = `
           select "c"."cartItemId",
                  "c"."price",
+                 "c"."quantity",
                  "p"."productId",
                  "p"."image",
                  "p"."name",
@@ -141,8 +162,68 @@ app.post('/api/cart', (req, res, next) => {
       })
       .catch(err => next(err));
   } else {
-    return next(new ClientError('Product ID must be a positive integer.', 400));
+    return next(new ClientError('Product ID and quantity must be a positive integer.', 400));
   }
+});
+
+app.patch('/api/cart', (req, res, next) => {
+  const { quantity, cartItemId } = req.body;
+  if (!quantity || !cartItemId) {
+    return next(new ClientError('Must have a numeric Id and quantity to update cart.', 400));
+  }
+  const sql = `
+    update "cartItems"
+       set "quantity" = $1
+     where "cartItemId" = $2
+      returning *;
+  `;
+  const params = [quantity, cartItemId];
+  db.query(sql, params)
+    .then(result => {
+      const updatedItem = result.rows[0];
+      if (!updatedItem) {
+        return Promise.reject(new ClientError('There are no products in the cart by that Id.', 400));
+      }
+      const sql = `
+          select "c"."cartItemId",
+                 "c"."price",
+                 "c"."quantity",
+                 "p"."productId",
+                 "p"."image",
+                 "p"."name",
+                 "p"."shortDescription"
+            from "cartItems" as "c"
+            join "products" as "p" using ("productId")
+           where "c"."cartItemId" = $1
+        `;
+      const params = [cartItemId];
+      return (
+        db.query(sql, params)
+          .then(result => {
+            res.status(200).json(result.rows[0]);
+          })
+      );
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/cart', (req, res, next) => {
+  const { cartId } = req.session;
+  const { cartItemId } = req.body;
+  if (!cartItemId) {
+    return next(new ClientError('Must include item\'s ID to delete item', 400));
+  }
+  const sql = `
+    delete from "cartItems"
+    where "cartId"     = $1
+      and "cartItemId" = $2;
+  `;
+  const params = [cartId, cartItemId];
+  db.query(sql, params)
+    .then(response => {
+      res.sendStatus(204);
+    })
+    .catch(err => next(err));
 });
 
 app.post('/api/orders', (req, res, next) => {
@@ -168,25 +249,6 @@ app.post('/api/orders', (req, res, next) => {
       })
       .catch(err => next(err));
   }
-});
-
-app.delete('/api/cart', (req, res, next) => {
-  const { cartId } = req.session;
-  const { cartItemId } = req.body;
-  if (!cartItemId) {
-    return next(new ClientError('Must include item\'s ID to delete item', 400));
-  }
-  const sql = `
-    delete from "cartItems"
-    where "cartId"     = $1
-      and "cartItemId" = $2;
-  `;
-  const params = [cartId, cartItemId];
-  db.query(sql, params)
-    .then(response => {
-      res.sendStatus(204);
-    })
-    .catch(err => next(err));
 });
 
 app.use('/api', (req, res, next) => {
