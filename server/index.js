@@ -76,7 +76,9 @@ app.get('/api/cart', (req, res, next) => {
 
 app.post('/api/cart', (req, res, next) => {
   const { productId, quantity } = req.body;
-  if (productId > 0 && typeof parseInt(productId) === 'number') {
+  const idIsValid = productId > 0 && typeof parseInt(productId) === 'number';
+  const quantityIsValid = quantity > 0 && typeof parseInt(quantity) === 'number';
+  if (idIsValid && quantityIsValid) {
     const params = [productId];
     const sql = `
       select "price"
@@ -160,7 +162,7 @@ app.post('/api/cart', (req, res, next) => {
       })
       .catch(err => next(err));
   } else {
-    return next(new ClientError('Product ID must be a positive integer.', 400));
+    return next(new ClientError('Product ID and quantity must be a positive integer.', 400));
   }
 });
 
