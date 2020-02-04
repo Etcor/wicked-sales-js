@@ -51,6 +51,7 @@ export default class App extends React.Component {
   }
 
   deleteFromCart(itemId) {
+    const { cartItemId } = itemId;
     fetch('/api/cart', {
       method: 'DELETE',
       headers: {
@@ -59,7 +60,7 @@ export default class App extends React.Component {
       body: JSON.stringify(itemId)
     })
       .then(res => {
-        const cart = this.state.cart.filter(item => item.cartItemId !== itemId);
+        const cart = this.state.cart.filter(item => item.cartItemId !== cartItemId);
         this.setState({ cart });
       })
       .catch(err => console.error(err));

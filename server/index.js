@@ -75,10 +75,9 @@ app.get('/api/cart', (req, res, next) => {
 });
 
 app.post('/api/cart', (req, res, next) => {
-  const { productId, quantity } = req.body;
+  const { productId } = req.body;
   const idIsValid = productId > 0 && typeof parseInt(productId) === 'number';
-  const quantityIsValid = quantity > 0 && typeof parseInt(quantity) === 'number';
-  if (idIsValid && quantityIsValid) {
+  if (idIsValid) {
     const params = [productId];
     const sql = `
       select "price"
@@ -122,19 +121,19 @@ app.post('/api/cart', (req, res, next) => {
               if (result.rowCount === 0) {
                 const sql = `
                 insert into "cartItems" ("cartId", "productId", "price", "quantity")
-                values ($1, $2, $3, $4)
+                values ($1, $2, $3, 1)
                 returning "cartItemId";
               `;
-                const params = [cartId, productId, price, quantity];
+                const params = [cartId, productId, price];
                 return db.query(sql, params);
               } else {
                 const sql = `
                 update "cartItems"
-                   set "quantity" = "quantity" + $1
-                 where "cartId" = $2 and "productId" = $3
+                   set "quantity" = "quantity" + 1
+                 where "cartId" = $1 and "productId" = $2
                  returning "cartItemId";
               `;
-                const params = [quantity, cartId, productId];
+                const params = [cartId, productId];
                 return db.query(sql, params);
               }
             })
