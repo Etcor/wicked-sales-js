@@ -43,9 +43,17 @@ export default class App extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          cart: [...this.state.cart, result]
-        });
+        const cart = [...this.state.cart];
+        const productIds = cart.map(item => item.productId);
+        if (productIds.includes(result.productId)) {
+          cart.map((item, index) => {
+            if (item.productId === result.productId) {
+              cart[index] = result;
+            }
+          });
+          return this.setState({ cart });
+        }
+        return this.setState({ cart: [...cart, result] });
       })
       .catch(err => console.error(err));
   }
@@ -88,6 +96,16 @@ export default class App extends React.Component {
     this.setState({ view: { name, params } });
   }
 
+  findItemCountInCart() {
+    const { cart } = this.state;
+    if (cart.length) {
+      return cart
+        .map(item => item.quantity)
+        .reduce((totalItems, item) => totalItems + item);
+    }
+    return 0;
+  }
+
   renderView() {
     const { view: { name, params }, cart } = this.state;
     const renderViews = {
@@ -110,6 +128,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    const itemsInCart = this.findItemCountInCart();
     return (
       <React.Fragment>
         <div
@@ -117,7 +136,7 @@ export default class App extends React.Component {
           style={{ height: '100vh', overflow: 'auto' }}>
           <Header
             viewCart={this.setView}
-            cartItemCount={this.state.cart.length}
+            cartItemCount={itemsInCart}
           />
           <div className="container">
             { this.renderView() }

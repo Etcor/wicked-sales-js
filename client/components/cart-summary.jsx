@@ -28,6 +28,7 @@ function CartSummaryItems(props) {
             <p className="card-text">
               {props.shortDescription}
             </p>
+            <p>Quantity: {props.quantity}</p>
             <button
               onClick={deleteItem}
               className="btn btn-danger">
@@ -62,7 +63,7 @@ function CartSummary(props) {
     if (props.cart.length === 0) {
       return '0.00';
     }
-    const prices = props.cart.map(item => item.price);
+    const prices = props.cart.map(item => item.price * item.quantity);
     const total = prices.reduce((subTotal, price) => subTotal + price);
     const formatTotal = (total / 100).toFixed(2);
     return formatTotal;
