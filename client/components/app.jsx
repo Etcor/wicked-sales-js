@@ -4,21 +4,26 @@ import CartSummary from './cart-summary';
 import ProductList from './product-list';
 import ProductDetails from './product-details';
 import CheckoutForm from './checkout-form';
+import WelcomeModal from './welcome-modal';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      cart: [],
       view: {
         name: 'catalog',
         params: {}
       },
-      cart: []
+      welcomeModal: {
+        show: true
+      }
     };
     this.setView = this.setView.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
     this.deleteFromCart = this.deleteFromCart.bind(this);
+    this.hideWelcomeModal = this.hideWelcomeModal.bind(this);
   }
 
   componentDidMount() {
@@ -106,6 +111,14 @@ export default class App extends React.Component {
     return 0;
   }
 
+  hideWelcomeModal() {
+    this.setState({
+      welcomeModal: {
+        show: false
+      }
+    });
+  }
+
   renderView() {
     const { view: { name, params }, cart } = this.state;
     const renderViews = {
@@ -129,11 +142,16 @@ export default class App extends React.Component {
 
   render() {
     const itemsInCart = this.findItemCountInCart();
+    const { show } = this.state.welcomeModal;
     return (
       <React.Fragment>
         <div
           className="container-fluid bg-light p-0"
           style={{ height: '100vh', overflow: 'auto' }}>
+          <WelcomeModal
+            displayModal={show}
+            hideWelcomeModal={this.hideWelcomeModal}
+          />
           <Header
             viewCart={this.setView}
             cartItemCount={itemsInCart}
