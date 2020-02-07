@@ -126,6 +126,7 @@ export default class App extends React.Component {
         viewDetails={this.setView}/>,
       details: <ProductDetails
         viewProduct={params}
+        viewCart={this.setView}
         viewCatalog={this.setView}
         addToCart={this.addToCart}/>,
       cart: <CartSummary
