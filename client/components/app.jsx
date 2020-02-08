@@ -12,11 +12,11 @@ export default class App extends React.Component {
     this.state = {
       cart: [],
       view: {
-        name: 'catalog',
+        name: 'cart',
         params: {}
       },
       welcomeModal: {
-        show: true
+        show: false
       }
     };
     this.setView = this.setView.bind(this);
@@ -24,6 +24,7 @@ export default class App extends React.Component {
     this.placeOrder = this.placeOrder.bind(this);
     this.deleteFromCart = this.deleteFromCart.bind(this);
     this.hideWelcomeModal = this.hideWelcomeModal.bind(this);
+    this.updateItemQuantity = this.updateItemQuantity.bind(this);
   }
 
   componentDidMount() {
@@ -153,7 +154,8 @@ export default class App extends React.Component {
       cart: <CartSummary
         cart={cart}
         setView={this.setView}
-        deleteItem={this.deleteFromCart}/>,
+        deleteItem={this.deleteFromCart}
+        updateQuantity={this.updateItemQuantity}/>,
       checkout: <CheckoutForm
         cart={cart}
         setView={this.setView}
@@ -178,7 +180,7 @@ export default class App extends React.Component {
             viewCart={this.setView}
             cartItemCount={itemsInCart}
           />
-          <div className="container">
+          <div className="container py-5">
             { this.renderView() }
           </div>
         </div>
