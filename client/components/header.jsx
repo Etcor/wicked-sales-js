@@ -6,7 +6,7 @@ function Header(props) {
   };
 
   return (
-    <header className="container-fluid bg-dark text-light mb-5">
+    <header className="container-fluid bg-dark text-light">
       <div className="d-flex justify-content-between px-5 py-3">
         <div className="d-flex align-items-center">
           <i className="fas fa-dollar-sign text-light"></i>
