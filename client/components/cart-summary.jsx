@@ -1,44 +1,83 @@
 import React from 'react';
+import RemoveItemModal from './remove-item-modal';
 
-function CartSummaryItems(props) {
+class CartSummaryItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDeleteModal: false
+    };
+    this.deleteItem = this.deleteItem.bind(this);
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.handleQuantityChange = this.handleQuantityChange.bind(this);
+  }
 
-  const price = (props.price / 100).toFixed(2);
-  const deleteItem = () => {
-    const { cartItemId } = props;
-    props.deleteItem({ cartItemId });
-  };
+  deleteItem() {
+    const { cartItemId } = this.props;
+    this.props.deleteItem({ cartItemId });
+  }
 
-  return (
-    <div className="card mb-3">
-      <div className="card-body">
-        <div className="row">
-          <img
-            alt=""
-            src={props.image}
-            className="col-6"
-            style={{ objectFit: 'contain', height: '300px' }}
-          />
-          <div className="card-body col-6 pt-5">
-            <h3 className="card-title pt-4">
-              {props.name}
-            </h3>
-            <h5 className="card-subtitle text-muted py-2">
-              ${price}
-            </h5>
-            <p className="card-text">
-              {props.shortDescription}
-            </p>
-            <p>Quantity: {props.quantity}</p>
-            <button
-              onClick={deleteItem}
-              className="btn btn-danger">
-              Delete
-            </button>
+  handleQuantityChange(operand) {
+    const { cartItemId } = this.props;
+    if (this.props.quantity === 1 && operand === '-') {
+      return this.showDeleteModal();
+    }
+    this.props.updateQuantity(cartItemId, operand);
+  }
+
+  showDeleteModal() {
+    this.setState({ showDeleteModal: !this.state.showDeleteModal });
+  }
+
+  render() {
+    const price = (this.props.price / 100).toFixed(2);
+    return (
+      <>
+        <div className="card mb-3">
+          <div className="row border bg-white rounded item-card p-3">
+            <div className="d-flex justify-content-between w-100">
+              <h3 className="card-title">{this.props.name}</h3>
+
+            </div>
+            <img
+              src={this.props.image}
+              className="col-md-4"
+              style={{ objectFit: 'contain', maxHeight: '250px' }}
+            />
+            <div className="col-md-8 m-auto">
+              <h4 className="text-muted">
+                ${price}
+              </h4>
+              <p className="card-text">
+                {this.props.shortDescription}
+              </p>
+              <div className="d-flex">
+                <h5 className="my-auto">Quantity:</h5>
+                <div className="d-flex btn-grp mx-3 my-auto border border-dark">
+                  <div className="btn btn-light" onClick={() => this.handleQuantityChange('-')}>
+                    <i className="fas fa-minus"/>
+                  </div>
+                  <div className="d-flex px-3">
+                    <h5 className="m-auto">{this.props.quantity}</h5>
+                  </div>
+                  <div className="btn btn-light" onClick={() => this.handleQuantityChange('+')}>
+                    <i className="fas fa-plus" />
+                  </div>
+                </div>
+                <div onClick={this.showDeleteModal} className="btn btn-danger ml-auto">Delete</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
+        <RemoveItemModal
+          {...this.props}
+          deleteItem={this.deleteItem}
+          toggleModal={this.showDeleteModal}
+          displayModal={this.state.showDeleteModal}
+        />
+      </>
+    );
+  }
 }
 
 function CartSummary(props) {
@@ -47,7 +86,7 @@ function CartSummary(props) {
     return props.cart.length === 0
       ? <h3 className="text-center text-muted">Your cart is empty.</h3>
       : props.cart.map(item => {
-        return <CartSummaryItems deleteItem={props.deleteItem} key={item.cartItemId} {...item} />;
+        return <CartSummaryItem updateQuantity={props.updateQuantity} deleteItem={props.deleteItem} key={item.cartItemId} {...item} />;
       });
   };
 
@@ -72,7 +111,7 @@ function CartSummary(props) {
   const buttonIsActive = props.cart.length === 0 ? 'disabled' : '';
 
   return (
-    <React.Fragment>
+    <>
       <div className="d-flex align-items-center">
         <i className="fas fa-chevron-left pb-3 mr-2"></i>
         <p
@@ -81,20 +120,18 @@ function CartSummary(props) {
           Back to catalog
         </p>
       </div>
-      <div className="d-flex justify-content-between align-items-center py-3">
-        <h1 className="text-left">My Cart</h1>
-        <h2 className="text-right">Total: ${totalPrice()}</h2>
-      </div>
+      <h1 className="mb-3">My Cart</h1>
       {viewCart()}
-      <div className="d-flex flex-row-reverse align-items-center py-3 ">
+      <div className="d-flex justify-content-between">
+        <h2 className="text-right">Total: ${totalPrice()}</h2>
         <a
           onClick={showCheckout}
           style={{ cursor: 'pointer' }}
-          className={`btn btn-primary text-white ${buttonIsActive}`}>
+          className={`btn btn-primary text-white my-auto ${buttonIsActive}`}>
           Checkout
         </a>
       </div>
-    </React.Fragment>
+    </>
   );
 }
 

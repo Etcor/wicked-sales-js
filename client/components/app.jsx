@@ -24,6 +24,7 @@ export default class App extends React.Component {
     this.placeOrder = this.placeOrder.bind(this);
     this.deleteFromCart = this.deleteFromCart.bind(this);
     this.hideWelcomeModal = this.hideWelcomeModal.bind(this);
+    this.updateItemQuantity = this.updateItemQuantity.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +60,27 @@ export default class App extends React.Component {
           return this.setState({ cart });
         }
         return this.setState({ cart: [...cart, result] });
+      })
+      .catch(err => console.error(err));
+  }
+
+  updateItemQuantity(cartItemId, operand) {
+    fetch('/api/cart', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cartItemId, operand })
+    })
+      .then(res => res.json())
+      .then(result => {
+        const cart = [...this.state.cart];
+        cart.map((item, index) => {
+          if (item.productId === result.productId) {
+            cart[index] = result;
+          }
+        });
+        return this.setState({ cart });
       })
       .catch(err => console.error(err));
   }
@@ -132,7 +154,8 @@ export default class App extends React.Component {
       cart: <CartSummary
         cart={cart}
         setView={this.setView}
-        deleteItem={this.deleteFromCart}/>,
+        deleteItem={this.deleteFromCart}
+        updateQuantity={this.updateItemQuantity}/>,
       checkout: <CheckoutForm
         cart={cart}
         setView={this.setView}
@@ -157,7 +180,7 @@ export default class App extends React.Component {
             viewCart={this.setView}
             cartItemCount={itemsInCart}
           />
-          <div className="container">
+          <div className="container py-5">
             { this.renderView() }
           </div>
         </div>

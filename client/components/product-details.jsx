@@ -1,5 +1,5 @@
 import React from 'react';
-import AddItemModal from './confirmation-modal';
+import AddItemModal from './add-item-modal';
 
 class ProductDetails extends React.Component {
   constructor(props) {
