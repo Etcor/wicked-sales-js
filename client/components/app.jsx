@@ -63,6 +63,27 @@ export default class App extends React.Component {
       .catch(err => console.error(err));
   }
 
+  updateItemQuantity(cartItemId, operand) {
+    fetch('/api/cart', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cartItemId, operand })
+    })
+      .then(res => res.json())
+      .then(result => {
+        const cart = [...this.state.cart];
+        cart.map((item, index) => {
+          if (item.productId === result.productId) {
+            cart[index] = result;
+          }
+        });
+        return this.setState({ cart });
+      })
+      .catch(err => console.error(err));
+  }
+
   deleteFromCart(itemId) {
     const { cartItemId } = itemId;
     fetch('/api/cart', {

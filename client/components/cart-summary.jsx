@@ -13,7 +13,6 @@ function CartSummaryItems(props) {
       <div className="card-body">
         <div className="row">
           <img
-            alt=""
             src={props.image}
             className="col-6"
             style={{ objectFit: 'contain', height: '300px' }}
@@ -72,7 +71,7 @@ function CartSummary(props) {
   const buttonIsActive = props.cart.length === 0 ? 'disabled' : '';
 
   return (
-    <React.Fragment>
+    <>
       <div className="d-flex align-items-center">
         <i className="fas fa-chevron-left pb-3 mr-2"></i>
         <p
@@ -94,7 +93,7 @@ function CartSummary(props) {
           Checkout
         </a>
       </div>
-    </React.Fragment>
+    </>
   );
 }
 
