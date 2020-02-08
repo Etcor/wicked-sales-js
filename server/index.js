@@ -44,7 +44,7 @@ app.get('/api/products/:productId', (req, res, next) => {
     .then(result => {
       const product = result.rows[0];
       if (!product) {
-        return next(new ClientError(`Cannot find product with Id ${productId}.`, 404));
+        throw new ClientError(`Cannot find product with Id ${productId}.`, 404);
       }
       return res.status(200).json(product);
     })
@@ -87,7 +87,7 @@ app.post('/api/cart', (req, res, next) => {
       .then(result => {
         const products = result.rows;
         if (products.length === 0) {
-          return Promise.reject(new ClientError('There are no products by that Id.', 400));
+          throw new ClientError('There are no products by that Id.', 400);
         } else if (req.session.cartId) {
           const { price } = products[0];
           const { cartId } = req.session;
@@ -166,22 +166,33 @@ app.post('/api/cart', (req, res, next) => {
 });
 
 app.patch('/api/cart', (req, res, next) => {
-  const { quantity, cartItemId } = req.body;
-  if (!quantity || !cartItemId) {
-    return next(new ClientError('Must have a numeric Id and quantity to update cart.', 400));
+  const { operand, cartItemId } = req.body;
+  const hasValidOperand = operand === '+' || operand === '-';
+  if (!cartItemId || !hasValidOperand) {
+    return next(new ClientError('Must have a numeric Id and an operand to update cart.', 400));
   }
-  const sql = `
+  let sql = '';
+  if (operand === '+') {
+    sql = `
     update "cartItems"
-       set "quantity" = $1
-     where "cartItemId" = $2
+       set "quantity" = "quantity" + 1
+     where "cartItemId" = $1
       returning *;
   `;
-  const params = [quantity, cartItemId];
+  } else if (operand === '-') {
+    sql = `
+    update "cartItems"
+       set "quantity" = "quantity" - 1
+     where "cartItemId" = $1
+      returning *;
+  `;
+  }
+  const params = [cartItemId];
   db.query(sql, params)
     .then(result => {
       const updatedItem = result.rows[0];
       if (!updatedItem) {
-        return Promise.reject(new ClientError('There are no products in the cart by that Id.', 400));
+        throw new ClientError('There are no products in the cart by that Id.', 400);
       }
       const sql = `
           select "c"."cartItemId",
