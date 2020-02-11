@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  text-decoration: none;
 }
 
 .modal-overlay {
@@ -16,7 +17,6 @@
   margin: auto;
 }
 
-
 .modal-img {
   object-fit: contain;
   max-height: auto;
@@ -27,4 +27,12 @@
   cursor: pointer;
   font-size: 1.5rem;
   color: #0f0f0f94;
+}
+a {
+  color: rgb(78, 78, 78);
+}
+
+a:hover {
+  text-decoration: none;
+  color: black;
 }
