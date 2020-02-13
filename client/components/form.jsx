@@ -5,17 +5,17 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullName: '',
-      phoneNumber: '',
-      email: '',
-      address1: '',
-      address2: '',
+      CVV: '',
       city: '',
+      email: '',
       state: '',
       zipCode: '',
+      fullName: '',
+      address1: '',
+      address2: '',
       creditCard: '',
-      expirationDate: '',
-      CVV: ''
+      phoneNumber: '',
+      expirationDate: ''
     };
   }
 
