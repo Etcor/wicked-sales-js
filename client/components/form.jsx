@@ -15,7 +15,16 @@ class Form extends React.Component {
       address2: '',
       creditCard: '',
       phoneNumber: '',
-      expirationDate: ''
+      expirationDate: '',
+      needsValidation: {
+        city: true,
+        email: true,
+        zipCode: true,
+        fullName: true,
+        address1: true,
+        address2: true,
+        phoneNumber: true
+      }
     };
   }
 
