@@ -238,18 +238,18 @@ app.delete('/api/cart', (req, res, next) => {
 
 app.post('/api/orders', (req, res, next) => {
   const { cartId } = req.session;
-  const { name, creditCard, shippingAddress } = req.body;
+  const { fullName, email, phoneNumber, creditCard, expirationDate, cvv, shippingAddress } = req.body;
   if (!cartId) {
     return next(new ClientError('No cart exists for that order.', 400));
-  } else if (!name || !creditCard || !shippingAddress) {
-    return next(new ClientError('Order must include name, address and payment information.', 400));
+  } else if (!fullName || !email || !phoneNumber || !creditCard || !expirationDate || !cvv || !shippingAddress) {
+    return next(new ClientError('Order must include a name, an email, a phone number, an address and payment information.', 400));
   } else {
     const sql = `
-      insert into "orders" ("cartId", "name", "creditCard", "shippingAddress")
-      values ($1, $2, $3, $4)
-      returning "orderId", "createdAt", "name", "creditCard", "shippingAddress";
+      insert into "orders" ("cartId", "fullName", "email", "phoneNumber", "creditCard", "expirationDate", "cvv", "shippingAddress")
+      values ($1, $2, $3, $4, $5, $6, $7, $8)
+      returning "orderId";
     `;
-    const params = [cartId, name, creditCard, shippingAddress];
+    const params = [cartId, fullName, email, phoneNumber, creditCard, expirationDate, cvv, shippingAddress];
 
     db.query(sql, params)
       .then(result => {
