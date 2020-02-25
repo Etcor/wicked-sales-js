@@ -8,8 +8,9 @@ function AddItemModal(props) {
           <i className="fas fa-times ml-auto close-modal"
             onClick={() => props.toggleModal()}/>
         </div>
-        <h5 className="text-center">Item has been added to cart.</h5>
+        <h4 className="text-center">{props.productName}</h4>
         <img src={props.productImage} className="modal-img mb-3"/>
+        <h5 className="text-center">Item has been added to cart.</h5>
         <div className="btn-group w-100">
           <button className="btn btn-secondary w-100"
             onClick={() => props.viewCatalog()}>
