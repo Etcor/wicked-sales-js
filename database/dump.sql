@@ -287,6 +287,7 @@ COPY public.orders ("orderId", "cartId", "fullName", email, "phoneNumber", "cred
 --
 
 COPY public.products ("productId", name, price, image, "shortDescription", "longDescription", category) FROM stdin;
+1	Apple Watch Series 5	39900	/images/apple-watch.jpg	The apple watch has a stylish, modern design, and is a must have for apple enthusiasts.	With a display that is now always on, Apple Watch Series 5 is there for you like never before. Faces and complications let you see the information that matters most to you without raising your wrist. Cases are available in a range of materials engineered by Apple, including 100% recycled aluminum1 and, for the first time, titanium. Match with any band you please, and create a combination that is perfectly personalized, just for you.	smart
 \.
 
 
@@ -294,7 +295,7 @@ COPY public.products ("productId", name, price, image, "shortDescription", "long
 -- Name: cartItems_cartItemId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."cartItems_cartItemId_seq"', 117, true);
+SELECT pg_catalog.setval('public."cartItems_cartItemId_seq"', 118, true);
 
 
 --
