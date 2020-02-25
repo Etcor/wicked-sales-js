@@ -94,6 +94,7 @@ class ProductDetails extends React.Component {
           </div>
           <AddItemModal
             viewCart={this.viewCart}
+            productName={product.name}
             productImage={product.image}
             viewCatalog={this.viewCatalog}
             toggleModal={this.toggleAddModal}
