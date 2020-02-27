@@ -39,6 +39,12 @@ class Form extends React.Component {
     if (name === 'terms') {
       return this.setState({ terms: !this.state.terms });
     }
+    if (name === 'phoneNumber' || name === 'CVV' || name === 'zipCode') {
+      if (/^\d+$/.test(value) || value === '') {
+        this.setState({ [name]: value });
+      }
+      return;
+    }
     this.setState({ [name]: value });
   }
 

@@ -11,9 +11,10 @@ function ProductListItem(props) {
 
   return (
     <div
-      className="card"
+      id="list-item"
       onClick={handleClick}
-      style={{ height: '100%', cursor: 'pointer' }}>
+      className="card border-0"
+      style={{ cursor: 'pointer' }}>
       <img
         alt=""
         src={props.image}
@@ -21,15 +22,13 @@ function ProductListItem(props) {
         style={{ objectFit: 'contain', height: '300px' }}
       />
       <div className="card-body">
-        <h5 className="card-title">
+        <h5 className="card-title text-center">
           {props.name}
         </h5>
-        <h6 className="card-subtitle text-muted pb-2">
+        <h6 className="card-subtitle text-muted text-center">
             ${price}
         </h6>
-        <p className="card-text">
-          {props.shortDescription}
-        </p>
+        <p className="card-text">{props.shortDescription}</p>
       </div>
     </div>
   );
