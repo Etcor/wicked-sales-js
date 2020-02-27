@@ -80,11 +80,9 @@ class ProductDetails extends React.Component {
                   </p>
                   <button
                     onClick={this.handleAdd}
-                    className="btn btn-primary">
+                    className="btn btn-primary mb-3">
                   Add to Cart
                   </button>
-                </div>
-                <div className="card-body">
                   <p className="card-text">
                     {product.longDescription}
                   </p>
