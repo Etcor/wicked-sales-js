@@ -169,16 +169,15 @@ export default class App extends React.Component {
     const { show } = this.state.welcomeModal;
     return (
       <React.Fragment>
+        <Header
+          viewCart={this.setView}
+          cartItemCount={itemsInCart}
+        />
         <div
-          className="container-fluid bg-light p-0"
-          style={{ height: '100vh', overflow: 'auto' }}>
+          className="container-fluid bg-light p-0 h-100 overflow-auto">
           <WelcomeModal
             displayModal={show}
             hideWelcomeModal={this.hideWelcomeModal}
-          />
-          <Header
-            viewCart={this.setView}
-            cartItemCount={itemsInCart}
           />
           <div className="container py-5">
             { this.renderView() }
