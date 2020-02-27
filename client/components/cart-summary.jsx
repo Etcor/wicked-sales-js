@@ -108,7 +108,7 @@ function CartSummary(props) {
     return formatTotal;
   };
 
-  const buttonIsActive = props.cart.length === 0 ? 'disabled' : '';
+  const cartIsEmtpty = props.cart.length === 0 ? 'd-none' : '';
 
   return (
     <>
@@ -127,7 +127,7 @@ function CartSummary(props) {
         <a
           onClick={showCheckout}
           style={{ cursor: 'pointer' }}
-          className={`btn btn-primary text-white my-auto ${buttonIsActive}`}>
+          className={`btn btn-primary text-white my-auto ${cartIsEmtpty}`}>
           Checkout
         </a>
       </div>
