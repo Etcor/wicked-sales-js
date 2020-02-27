@@ -10,9 +10,9 @@ function Header(props) {
       <div className="container">
         <div className="d-flex justify-content-between text-light">
           <div className="d-flex align-items-center">
-            <i className="fas fa-dollar-sign text-light"></i>
+            <i className="fas fa-stopwatch text-light"></i>
             <div className="text-left ml-1 header-title">
-              Wicked Sales
+              Watch This
             </div>
           </div>
           <div onClick={viewCart} className="ml-auto cart-icon">
