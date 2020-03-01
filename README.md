@@ -15,16 +15,16 @@ A full stack shopping cart app developed in PostgreSQL, Express, Node.js and Rea
 
 ## Live Demo
 
-Link: https://wickedsales.ethancordes.com
+Link: https://watch-this.ethancordes.com
 
 ## Features
 
-- User can view a catalog of watches
-- User can view a detailed description of each watches
-- User can add a watch to their cart
-- User can delete a watch from their cart
-- User can update the quantity of a watch in their cart
-- User can complete a validated checkout form
+- User can view a catalog of watches.
+- User can view a detailed description of each watches.
+- User can add a watch to their cart.
+- User can delete a watch from their cart.
+- User can update the quantity of a watch in their cart.
+- User can complete a validated checkout form.
 
 ## Getting Started
 
