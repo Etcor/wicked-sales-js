@@ -43,6 +43,14 @@
   max-height: 300px;
 }
 
+.confirmation-img {
+  object-fit: contain;
+  min-width: 40em;
+  min-height: 40em;
+  max-width: 40em;
+  max-height: 40em;
+}
+
 .fade-in {
   animation: fade-in .75s;
   animation-fill-mode: forwards;
