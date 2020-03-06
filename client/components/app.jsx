@@ -3,6 +3,7 @@ import Header from './header';
 import CartSummary from './cart-summary';
 import ProductList from './product-list';
 import WelcomeModal from './welcome-modal';
+import OrderConfirmation from './order-confirmation';
 import CheckoutForm from './checkout-form';
 import ProductDetails from './product-details';
 
@@ -112,8 +113,7 @@ export default class App extends React.Component {
       .then(res => res.json())
       .then(() => {
         this.setState({
-          view: { name: 'catalog', params: {} },
-          cart: []
+          view: { name: 'confirmation', params: {} }
         });
       })
       .catch(err => console.error(err));
@@ -141,6 +141,13 @@ export default class App extends React.Component {
     });
   }
 
+  closeOrderConfirmation() {
+    this.setState({
+      view: { name: 'catalog', params: {} },
+      cart: []
+    });
+  }
+
   renderView() {
     const { view: { name, params }, cart } = this.state;
     const renderViews = {
@@ -159,7 +166,14 @@ export default class App extends React.Component {
       checkout: <CheckoutForm
         cart={cart}
         setView={this.setView}
-        placeOrder={this.placeOrder}/>
+        placeOrder={this.placeOrder}
+        showConfirmationModal={this.toggleConfirmationModal}
+      />,
+      confirmation: <OrderConfirmation
+        cart={cart}
+        confirmOrder={() => this.closeOrderConfirmation()}
+      />
+
     };
     return renderViews[name];
   }
