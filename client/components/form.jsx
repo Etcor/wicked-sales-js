@@ -79,7 +79,7 @@ class Form extends React.Component {
       isValidated.address1 = true;
     }
 
-    if (city.length < 3) {
+    if (city.trim().length < 3) {
       isValidated.city = false;
     } else {
       isValidated.city = true;
