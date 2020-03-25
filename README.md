@@ -1,6 +1,6 @@
 # Watch This
 
-A full stack shopping cart app developed in PostgreSQL, Express, Node.js and React.js.
+A full stack shopping cart app developed in React.js, Node.js, Express, and PostgreSQL.
 
 ## Technologies Used
 
@@ -8,6 +8,7 @@ A full stack shopping cart app developed in PostgreSQL, Express, Node.js and Rea
 - Webpack 4
 - Bootstrap 4
 - Node.js
+- Express
 - PostgreSQL
 - HTML5
 - CSS3
